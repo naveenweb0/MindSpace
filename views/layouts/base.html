@@ -15,13 +15,14 @@
   <link rel="preload" href="/fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/dmsans-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/fonts/fonts.css">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/main.css?v=1.0.2">
+  <link rel="stylesheet" href="/css/book.css?v=1.0.2">
+  <link rel="stylesheet" href="/css/chatbot.css?v=1.0.2">
   <script>
     window.API_BASE = (location.hostname.includes('vercel.app')) ? 'https://mindspace-s17y.onrender.com' : '';
   </script>
-  <script src="/js/main.js" defer></script>
-  <script src="/js/chatbot.js?v=1.0.1" defer></script>
+  <script src="/js/main.js?v=1.0.2" defer></script>
+  <script src="/js/chatbot.js?v=1.0.2" defer></script>
   <!-- LocalBusiness structured data is populated from admin settings at runtime (never invents an address). -->
   <script type="application/ld+json" id="ld-json"></script>
   <script id="studio-settings" type="application/json">{{SETTINGS_JSON}}</script>
@@ -106,8 +107,8 @@
           <h4>Explore</h4>
           <a href="/">Home</a>
           <a href="/sessions">Sessions</a>
+          <a href="/how-it-works">How It Works</a>
           <a href="/memberships">Memberships</a>
-          <a href="/my-booking">My Booking</a>
           <a href="/our-space">Our Space</a>
           <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
@@ -124,10 +125,9 @@
         <div class="footer-col">
           <h4>Start here</h4>
           <a href="/book" class="footer-cta">Book a Session</a>
-          <a href="/my-booking">Find my booking</a>
-          <a href="/how-it-works">How it works</a>
+          <a href="/my-booking">My Booking</a>
           <a href="/gallery">Gallery</a>
-          <a href="/admin" style="opacity:.6;font-size:13px;margin-top:6px">Admin Portal</a>
+          <a href="/admin">Admin Portal</a>
         </div>
       </div>
 
@@ -137,7 +137,6 @@
           <a href="/privacy">Privacy Policy</a>
           <a href="/terms">Terms</a>
           <a href="/cancellation">Cancellation Policy</a>
-          <a href="/admin">Admin</a>
         </nav>
       </div>
     </div>
