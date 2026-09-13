@@ -1,5 +1,7 @@
 'use strict';
-/* My Booking — look up bookings & memberships by phone / booking ID. */
+/* My Booking — look up bookings & memberships by phone / booking ID.
+   Bookings are persisted to localStorage at confirmation time so they
+   remain visible even if the server database resets (e.g. Vercel cold-start). */
 
 (function () {
   const $ = (s, c) => (c || document).querySelector(s);
@@ -63,6 +65,44 @@
       </div>`;
   }
 
+  /* ---- local storage helpers ---- */
+  function getLocalBookings() {
+    try { return JSON.parse(localStorage.getItem('tps_bookings') || '[]'); } catch (_) { return []; }
+  }
+  function updateLocalBookingStatus(ref, status) {
+    try {
+      const saved = getLocalBookings().map((b) => b.booking_reference === ref ? { ...b, booking_status: status } : b);
+      localStorage.setItem('tps_bookings', JSON.stringify(saved));
+    } catch (_) {}
+  }
+
+  function attachCancelListeners(container) {
+    $$('.cancel-btn', container).forEach((btn) => btn.addEventListener('click', async () => {
+      if (!confirm('Cancel this booking? Refunds follow the studio\'s cancellation policy.')) return;
+      try {
+        await post('/api/bookings/' + btn.dataset.ref + '/cancel', {});
+        toast('Booking cancelled.', 'ok');
+        updateLocalBookingStatus(btn.dataset.ref, 'cancelled');
+        const head = btn.closest('.confirm-card').querySelector('.cc-head');
+        head.innerHTML = head.innerHTML.replace(/<span class="chip chip-sage">Paid ✓<\/span>/, '');
+        btn.remove();
+      } catch (e) { toast(e.message, 'err'); }
+    }));
+  }
+
+  function renderBookingList(bookings, container, note) {
+    const today = localToday();
+    const upcoming = bookings.filter((b) => b.date >= today && ['pending', 'confirmed'].includes(b.booking_status));
+    const past = bookings.filter((b) => !(b.date >= today && ['pending', 'confirmed'].includes(b.booking_status)));
+    container.innerHTML = `
+      <div style="max-width:640px;margin:32px auto 0">
+        ${note || ''}
+        ${upcoming.length ? '<h2 class="h-md" style="margin:0 0 16px">Upcoming</h2>' + upcoming.map(bookingCard).join('') : ''}
+        ${past.length ? '<h2 class="h-md" style="margin:28px 0 16px">Past &amp; cancelled</h2>' + past.map(bookingCard).join('') : ''}
+      </div>`;
+    attachCancelListeners(container);
+  }
+
   /* ---- bookings ---- */
   async function doBookingFind() {
     const phone = $('#bPhone').value.trim();
@@ -71,32 +111,25 @@
     if (!/^[0-9+\-\s()]{7,15}$/.test(phone)) { toast('Enter a valid mobile number.', 'err'); return; }
     out.innerHTML = '<div class="skeleton" style="height:120px;border-radius:20px;max-width:640px;margin:28px auto 0"></div>';
     try {
-      const j = await post('/api/bookings/by-phone', { phone });
-      let bookings = j.bookings;
-      if (ref) {
-        bookings = bookings.filter((b) => b.booking_reference === ref);
+      let bookings = [];
+      // try server (may be empty on Vercel cold-start — that's OK)
+      try {
+        const j = await post('/api/bookings/by-phone', { phone });
+        bookings = j.bookings || [];
+      } catch (_) {}
+      // merge with locally saved bookings matched by phone digits
+      const local = getLocalBookings().filter((b) => b.customer_phone && b.customer_phone.replace(/\D/g, '') === phone.replace(/\D/g, ''));
+      for (const lb of local) {
+        if (!bookings.some((b) => b.booking_reference === lb.booking_reference)) bookings.push(lb);
       }
+      bookings.sort((a, b) => (b.date + b.start_time).localeCompare(a.date + a.start_time));
+      if (ref) bookings = bookings.filter((b) => b.booking_reference === ref);
+
       if (!bookings.length) {
         out.innerHTML = `<div class="state"><div class="state-emoji">🕊️</div><h2>No bookings found</h2><p>${ref ? `We couldn't find a booking with ID "${esc(ref)}" under this phone number.` : 'Looks like your calendar is waiting for its first little pause.'}</p><a class="btn btn-primary" href="/book">Book a Session</a></div>`;
         return;
       }
-      const today = localToday();
-      const upcoming = bookings.filter((b) => b.date >= today && ['pending', 'confirmed'].includes(b.booking_status));
-      const past = bookings.filter((b) => !(b.date >= today && ['pending', 'confirmed'].includes(b.booking_status)));
-      out.innerHTML = `
-        <div style="max-width:640px;margin:32px auto 0">
-          ${upcoming.length ? '<h2 class="h-md" style="margin:0 0 16px">Upcoming</h2>' + upcoming.map(bookingCard).join('') : ''}
-          ${past.length ? '<h2 class="h-md" style="margin:28px 0 16px">Past &amp; cancelled</h2>' + past.map(bookingCard).join('') : ''}
-        </div>`;
-      $$('.cancel-btn', out).forEach((btn) => btn.addEventListener('click', async () => {
-        if (!confirm('Cancel this booking? Refunds follow the studio’s cancellation policy.')) return;
-        try {
-          await post('/api/bookings/' + btn.dataset.ref + '/cancel', {});
-          toast('Booking cancelled.', 'ok');
-          btn.closest('.confirm-card').querySelector('.cc-head').innerHTML = btn.closest('.confirm-card').querySelector('.cc-head').innerHTML.replace(/<span class="chip chip-sage">Paid ✓<\/span>/, '');
-          btn.remove();
-        } catch (e) { toast(e.message, 'err'); }
-      }));
+      renderBookingList(bookings, out);
     } catch (e) {
       out.innerHTML = `<div class="state"><div class="state-emoji">🔍</div><h2>Nothing found</h2><p>${esc(e.message)}</p></div>`;
     }
@@ -107,6 +140,29 @@
     const el = $('#' + id);
     if (el) el.addEventListener('keydown', (e) => { if (e.key === 'Enter') doBookingFind(); });
   });
+
+  /* ---- auto-load local bookings on page init ---- */
+  (function initLocalBookings() {
+    // Pre-fill phone field from last confirmed booking
+    const lastPhone = localStorage.getItem('tps_last_phone');
+    const phoneEl = $('#bPhone');
+    if (phoneEl && lastPhone && !phoneEl.value) phoneEl.value = lastPhone;
+
+    // Show saved bookings immediately — no search needed
+    const local = getLocalBookings();
+    if (!local.length) return;
+    const out = $('#results');
+    if (!out) return;
+    const note = `<p class="muted" style="font-size:13px;margin:0 0 16px;text-align:center">📱 Saved on this device · <button id="clearLocal" style="font-size:13px;color:inherit;cursor:pointer;border:none;background:none;text-decoration:underline;padding:0">clear</button></p>`;
+    renderBookingList(local, out, note);
+    const clearBtn = $('#clearLocal');
+    if (clearBtn) clearBtn.addEventListener('click', () => {
+      if (!confirm('Clear all saved bookings from this device?')) return;
+      localStorage.removeItem('tps_bookings');
+      localStorage.removeItem('tps_last_phone');
+      out.innerHTML = '';
+    });
+  })();
 
   /* ---- memberships ---- */
   async function doMembershipFind() {

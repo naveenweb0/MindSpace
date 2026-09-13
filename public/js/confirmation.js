@@ -43,6 +43,23 @@
       const j = await r.json();
       if (!j.ok) throw new Error(j.message);
       renderBooking(j.booking);
+      // ── persist to localStorage so My Booking works even after a server cold-start ──
+      try {
+        const saved = JSON.parse(localStorage.getItem('tps_bookings') || '[]');
+        const exists = saved.some((b) => b.booking_reference === j.booking.booking_reference);
+        if (!exists) {
+          const entry = {
+            ...j.booking,
+            activity_name: (j.booking.activity && j.booking.activity.name) || 'Session',
+            activity_image: (j.booking.activity && j.booking.activity.image) || '',
+            _saved_at: Date.now(),
+          };
+          saved.unshift(entry);
+          localStorage.setItem('tps_bookings', JSON.stringify(saved.slice(0, 30)));
+        }
+        // also remember phone for quick My Booking look-ups
+        if (j.booking.customer_phone) localStorage.setItem('tps_last_phone', j.booking.customer_phone);
+      } catch (_) {}
     } catch (e) {
       renderMissing(e.message);
     }
@@ -131,3 +148,5 @@
 
   load();
 })();
+
+
