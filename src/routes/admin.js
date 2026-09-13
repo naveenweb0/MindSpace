@@ -75,6 +75,12 @@ module.exports = function adminRoutes(db) {
     const revenueToday = db.prepare(
       `SELECT COALESCE(SUM(total_amount),0) AS s FROM bookings WHERE date = ? AND payment_status = 'paid'`
     ).get(today).s;
+    const totalBookings = db.prepare(
+      `SELECT COUNT(*) AS n FROM bookings WHERE booking_status != 'cancelled'`
+    ).get().n;
+    const totalRevenue = db.prepare(
+      `SELECT COALESCE(SUM(total_amount),0) AS s FROM bookings WHERE payment_status = 'paid'`
+    ).get().s;
     const sessionsToday = db.prepare(
       `SELECT COUNT(DISTINCT date || start_time) AS n FROM bookings WHERE date = ? AND booking_status != 'cancelled'`
     ).get(today).n;
@@ -95,10 +101,10 @@ module.exports = function adminRoutes(db) {
 
     const latest = db.prepare(`
       SELECT b.*, a.name AS activity_name FROM bookings b JOIN activities a ON a.id = b.activity_id
-      ORDER BY b.created_at DESC LIMIT 6`).all();
+      ORDER BY b.created_at DESC LIMIT 10`).all();
 
     u.ok(res, {
-      stats: { bookingsToday, revenueToday, sessionsToday, capacityPct, pending, upcoming, activeMembers, newMessages },
+      stats: { bookingsToday, revenueToday, totalBookings, totalRevenue, sessionsToday, capacityPct, pending, upcoming, activeMembers, newMessages },
       latest,
     });
   });

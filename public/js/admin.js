@@ -232,6 +232,8 @@
     const upcomingBookings = allBookings.filter((b) => b.date >= todayStr && b.booking_status !== 'cancelled');
 
     const s = {
+      totalBookings: (j.stats && typeof j.stats.totalBookings === 'number') ? j.stats.totalBookings : allBookings.filter((b) => b.booking_status !== 'cancelled').length,
+      totalRevenue: (j.stats && typeof j.stats.totalRevenue === 'number') ? j.stats.totalRevenue : allBookings.filter((b) => b.payment_status === 'paid').reduce((acc, b) => acc + Number(b.total_amount || 0), 0),
       bookingsToday: (j.stats && typeof j.stats.bookingsToday === 'number') ? j.stats.bookingsToday : todayBookings.length,
       revenueToday: (j.stats && typeof j.stats.revenueToday === 'number') ? j.stats.revenueToday : todayRevenue,
       sessionsToday: (j.stats && typeof j.stats.sessionsToday === 'number') ? j.stats.sessionsToday : (new Set(todayBookings.map((b) => b.start_time)).size || 0),
@@ -246,16 +248,16 @@
 
     $('#viewRoot').innerHTML = `
       <div class="stat-grid">
-        ${statCard('Bookings today', s.bookingsToday, 'non-cancelled', 'accent')}
-        ${statCard('Revenue today', fmtINR(s.revenueToday), 'paid bookings')}
-        ${statCard('Sessions today', s.sessionsToday, 'distinct slots')}
-        ${statCard('Capacity', s.capacityPct + '%', 'of today’s slots filled', 'sage')}
+        ${statCard('Total Bookings', s.totalBookings, 'all-time confirmed', 'accent')}
+        ${statCard('Total Revenue', fmtINR(s.totalRevenue), 'all-time paid')}
+        ${statCard('Upcoming bookings', s.upcoming, 'scheduled sessions', 'sage')}
+        ${statCard('Bookings today', s.bookingsToday, 'today’s sessions')}
       </div>
       <div class="stat-grid">
+        ${statCard('Revenue today', fmtINR(s.revenueToday), 'paid today')}
         ${statCard('Pending payments', s.pending, 'unpaid holds', 'mustard')}
-        ${statCard('Upcoming bookings', s.upcoming, 'next 7 days + today')}
         ${statCard('Active members', s.activeMembers, 'memberships')}
-        ${statCard('Messages', s.newMessages, 'contact inbox', 'sage')}
+        ${statCard('Messages', s.newMessages, 'contact inbox')}
       </div>
       <div class="panel">
         <div class="panel-head"><h2>Latest bookings</h2><button class="btn-mini" data-go="bookings">View all →</button></div>
