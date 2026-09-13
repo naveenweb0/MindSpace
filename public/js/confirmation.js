@@ -35,6 +35,12 @@
     const token = params.get('token');
     if (!ref) return renderMissing();
 
+    let localBooking = null;
+    try {
+      const saved = JSON.parse(localStorage.getItem('tps_bookings') || '[]');
+      localBooking = saved.find((b) => b.booking_reference === ref);
+    } catch (_) {}
+
     try {
       const r = await fetch('/api/bookings/lookup', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -46,22 +52,30 @@
       // ── persist to localStorage so My Booking works even after a server cold-start ──
       try {
         const saved = JSON.parse(localStorage.getItem('tps_bookings') || '[]');
-        const exists = saved.some((b) => b.booking_reference === j.booking.booking_reference);
-        if (!exists) {
-          const entry = {
-            ...j.booking,
-            activity_name: (j.booking.activity && j.booking.activity.name) || 'Session',
-            activity_image: (j.booking.activity && j.booking.activity.image) || '',
-            _saved_at: Date.now(),
-          };
-          saved.unshift(entry);
-          localStorage.setItem('tps_bookings', JSON.stringify(saved.slice(0, 30)));
-        }
-        // also remember phone for quick My Booking look-ups
+        const idx = saved.findIndex((b) => b.booking_reference === j.booking.booking_reference);
+        const entry = {
+          ...j.booking,
+          activity_name: (j.booking.activity && j.booking.activity.name) || (localBooking && localBooking.activity_name) || 'Session',
+          activity_image: (j.booking.activity && j.booking.activity.image) || (localBooking && localBooking.activity_image) || '',
+          _saved_at: Date.now(),
+        };
+        if (idx >= 0) saved[idx] = entry; else saved.unshift(entry);
+        localStorage.setItem('tps_bookings', JSON.stringify(saved.slice(0, 50)));
+
+        const adm = JSON.parse(localStorage.getItem('tps_admin_bookings') || '[]');
+        const admIdx = adm.findIndex((b) => b.booking_reference === entry.booking_reference);
+        if (admIdx >= 0) adm[admIdx] = entry; else adm.unshift(entry);
+        localStorage.setItem('tps_admin_bookings', JSON.stringify(adm.slice(0, 50)));
+
         if (j.booking.customer_phone) localStorage.setItem('tps_last_phone', j.booking.customer_phone);
       } catch (_) {}
+      return;
     } catch (e) {
-      renderMissing(e.message);
+      if (localBooking) {
+        renderBooking(localBooking);
+      } else {
+        renderMissing(e.message);
+      }
     }
   }
 

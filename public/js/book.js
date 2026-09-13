@@ -425,6 +425,33 @@
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ booking_ref: p.booking.booking_reference, method: p.method, mock: p.payment.mode === 'mock' }),
           });
+          // persist to localStorage immediately
+          try {
+            const act = state.activity || {};
+            const item = {
+              ...p.booking,
+              ...j.booking,
+              activity_name: act.name || 'Creative Session',
+              activity_image: act.image || '/img/activity-painting.jpg',
+              customer_name: ($('#cName') && $('#cName').value.trim()) || p.booking.customer_name || 'Customer',
+              customer_phone: ($('#cPhone') && $('#cPhone').value.trim()) || p.booking.customer_phone || '',
+              customer_email: ($('#cEmail') && $('#cEmail').value.trim()) || p.booking.customer_email || '',
+              payment_status: 'paid',
+              booking_status: 'confirmed',
+              _saved_at: Date.now()
+            };
+            const saved = JSON.parse(localStorage.getItem('tps_bookings') || '[]');
+            const idx = saved.findIndex((b) => b.booking_reference === item.booking_reference);
+            if (idx >= 0) saved[idx] = item; else saved.unshift(item);
+            localStorage.setItem('tps_bookings', JSON.stringify(saved.slice(0, 50)));
+
+            const adm = JSON.parse(localStorage.getItem('tps_admin_bookings') || '[]');
+            const admIdx = adm.findIndex((b) => b.booking_reference === item.booking_reference);
+            if (admIdx >= 0) adm[admIdx] = item; else adm.unshift(item);
+            localStorage.setItem('tps_admin_bookings', JSON.stringify(adm.slice(0, 50)));
+
+            if (item.customer_phone) localStorage.setItem('tps_last_phone', item.customer_phone);
+          } catch (_) {}
           // success!
           window.location.href = '/confirmation?ref=' + j.booking.booking_reference + '&token=' + j.booking.view_token;
         } catch (e) {
