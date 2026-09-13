@@ -4,3 +4,7 @@ data/*.db-*
 .DS_Store
 .env
 npm-debug.log*
+image-search/
+pause-studio/
+.sudo_as_admin_successful
+.config/

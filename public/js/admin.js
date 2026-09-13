@@ -224,27 +224,26 @@
     (j.latest || []).forEach((b) => { if (b && b.booking_reference) map.set(b.booking_reference, b); });
     localList.forEach((b) => { if (b && b.booking_reference && !map.has(b.booking_reference)) map.set(b.booking_reference, b); });
     const allBookings = Array.from(map.values());
-
     const todayStr = localToday();
+    const activeBookings = allBookings.filter((b) => b.booking_status !== 'cancelled');
     const todayBookings = allBookings.filter((b) => b.date === todayStr && b.booking_status !== 'cancelled');
     const todayRevenue = todayBookings.filter((b) => b.payment_status === 'paid').reduce((acc, b) => acc + Number(b.total_amount || 0), 0);
+    const totalRevenue = activeBookings.filter((b) => b.payment_status === 'paid').reduce((acc, b) => acc + Number(b.total_amount || 0), 0);
     const pendingBookings = allBookings.filter((b) => b.booking_status === 'pending' || b.payment_status === 'unpaid');
     const upcomingBookings = allBookings.filter((b) => b.date >= todayStr && b.booking_status !== 'cancelled');
 
     const s = {
-      totalBookings: (j.stats && typeof j.stats.totalBookings === 'number') ? j.stats.totalBookings : allBookings.filter((b) => b.booking_status !== 'cancelled').length,
-      totalRevenue: (j.stats && typeof j.stats.totalRevenue === 'number') ? j.stats.totalRevenue : allBookings.filter((b) => b.payment_status === 'paid').reduce((acc, b) => acc + Number(b.total_amount || 0), 0),
-      bookingsToday: (j.stats && typeof j.stats.bookingsToday === 'number') ? j.stats.bookingsToday : todayBookings.length,
-      revenueToday: (j.stats && typeof j.stats.revenueToday === 'number') ? j.stats.revenueToday : todayRevenue,
-      sessionsToday: (j.stats && typeof j.stats.sessionsToday === 'number') ? j.stats.sessionsToday : (new Set(todayBookings.map((b) => b.start_time)).size || 0),
-      capacityPct: (j.stats && typeof j.stats.capacityPct === 'number') ? j.stats.capacityPct : (todayBookings.length ? Math.min(100, Math.round((todayBookings.length / 16) * 100)) : 0),
-      pending: (j.stats && typeof j.stats.pending === 'number') ? j.stats.pending : pendingBookings.length,
-      upcoming: (j.stats && typeof j.stats.upcoming === 'number') ? j.stats.upcoming : upcomingBookings.length,
+      totalBookings: Math.max(activeBookings.length, (j.stats && typeof j.stats.totalBookings === 'number' ? j.stats.totalBookings : 0)),
+      totalRevenue: Math.max(totalRevenue, (j.stats && typeof j.stats.totalRevenue === 'number' ? j.stats.totalRevenue : 0)),
+      upcoming: Math.max(upcomingBookings.length, (j.stats && typeof j.stats.upcoming === 'number' ? j.stats.upcoming : 0)),
+      bookingsToday: Math.max(todayBookings.length, (j.stats && typeof j.stats.bookingsToday === 'number' ? j.stats.bookingsToday : 0)),
+      revenueToday: Math.max(todayRevenue, (j.stats && typeof j.stats.revenueToday === 'number' ? j.stats.revenueToday : 0)),
+      pending: Math.max(pendingBookings.length, (j.stats && typeof j.stats.pending === 'number' ? j.stats.pending : 0)),
       activeMembers: (j.stats && typeof j.stats.activeMembers === 'number') ? j.stats.activeMembers : 0,
       newMessages: (j.stats && typeof j.stats.newMessages === 'number') ? j.stats.newMessages : 0,
     };
 
-    const latest = (j.latest && j.latest.length > 0) ? j.latest : allBookings.slice(0, 10);
+    const latest = allBookings.slice(0, 10);
 
     $('#viewRoot').innerHTML = `
       <div class="stat-grid">
