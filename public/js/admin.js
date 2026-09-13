@@ -67,41 +67,6 @@
     return `<div class="stat-card ${cls || ''}"><div class="sc-label">${label}</div><div class="sc-value">${value}</div>${sub ? `<div class="sc-sub">${sub}</div>` : ''}</div>`;
   }
 
-  const DEFAULT_DEMO_BOOKINGS = [
-    {
-      id: 101, booking_reference: 'TP-MND892', view_token: 'demo-tok-1',
-      customer_name: 'Priya Sharma', customer_email: 'priya.sharma@gmail.com', customer_phone: '9876543210',
-      activity_name: 'Painting', activity_image: '/img/activity-painting.jpg',
-      duration: 60, date: localToday(), start_time: '11:00', end_time: '12:00', number_of_guests: 2,
-      total_amount: 300, payment_status: 'paid', booking_status: 'confirmed', note: 'First time visiting with a friend',
-      created_at: new Date().toISOString()
-    },
-    {
-      id: 102, booking_reference: 'TP-CLY451', view_token: 'demo-tok-2',
-      customer_name: 'Aarav Mehta', customer_email: 'aarav.m@outlook.com', customer_phone: '9812345678',
-      activity_name: 'Clay Modelling', activity_image: '/img/activity-clay.jpg',
-      duration: 60, date: localToday(), start_time: '14:30', end_time: '15:30', number_of_guests: 1,
-      total_amount: 180, payment_status: 'paid', booking_status: 'attended', note: '',
-      created_at: new Date(Date.now() - 3600000).toISOString()
-    },
-    {
-      id: 103, booking_reference: 'TP-MND104', view_token: 'demo-tok-3',
-      customer_name: 'Rohan Gupta', customer_email: 'rohan.g@gmail.com', customer_phone: '9899112233',
-      activity_name: 'Mandala Making', activity_image: '/img/activity-mandala.jpg',
-      duration: 30, date: localToday(), start_time: '16:00', end_time: '16:30', number_of_guests: 1,
-      total_amount: 80, payment_status: 'paid', booking_status: 'confirmed', note: 'Looking forward to some quiet time',
-      created_at: new Date(Date.now() - 7200000).toISOString()
-    },
-    {
-      id: 104, booking_reference: 'TP-CRF552', view_token: 'demo-tok-4',
-      customer_name: 'Ananya Verma', customer_email: 'ananya.v@gmail.com', customer_phone: '9711223344',
-      activity_name: 'Crafting', activity_image: '/img/activity-crafting.jpg',
-      duration: 60, date: localToday(), start_time: '17:30', end_time: '18:30', number_of_guests: 2,
-      total_amount: 280, payment_status: 'paid', booking_status: 'confirmed', note: '',
-      created_at: new Date(Date.now() - 10800000).toISOString()
-    }
-  ];
-
   function getLocalBookings() {
     try {
       let b1 = JSON.parse(localStorage.getItem('tps_admin_bookings') || '[]');
@@ -109,13 +74,9 @@
       const map = new Map();
       b1.forEach((b) => { if (b && b.booking_reference) map.set(b.booking_reference, b); });
       b2.forEach((b) => { if (b && b.booking_reference && !map.has(b.booking_reference)) map.set(b.booking_reference, b); });
-      if (map.size === 0) {
-        DEFAULT_DEMO_BOOKINGS.forEach((b) => map.set(b.booking_reference, b));
-        localStorage.setItem('tps_admin_bookings', JSON.stringify(DEFAULT_DEMO_BOOKINGS));
-      }
       return Array.from(map.values());
     } catch (_) {
-      return DEFAULT_DEMO_BOOKINGS;
+      return [];
     }
   }
 
