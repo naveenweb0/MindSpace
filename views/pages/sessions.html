@@ -1,0 +1,44 @@
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head center">
+      <p class="eyebrow">Sessions &amp; activities</p>
+      <h1 class="h-xl">Pick your kind of <span class="em">creative space.</span></h1>
+      <p class="lead">Different day. Different mood. Choose whatever feels right — every session is beginner-friendly and materials are included.</p>
+    </div>
+
+    <div class="act-grid" id="sessionsGrid">
+      <div class="skeleton" style="height:360px"></div>
+      <div class="skeleton" style="height:360px"></div>
+      <div class="skeleton" style="height:360px"></div>
+      <div class="skeleton" style="height:360px"></div>
+      <div class="skeleton" style="height:360px"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tint section-tight">
+  <div class="container center">
+    <h2 class="h-lg">Not sure what to pick?</h2>
+    <p class="lead" style="margin:12px auto 24px">Come for the one that feels easiest right now. There's no wrong answer — and you can try a different one next time.</p>
+    <a class="btn btn-primary" href="/book">Book a Session <span class="arr">→</span></a>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var grid = document.getElementById('sessionsGrid');
+    var accents = { painting: 'sage', clay: 'terracotta', mandala: 'lavender', crafting: 'mustard', music: 'cream' };
+    var verbs = { painting: 'Book Painting', clay: 'Book Clay', mandala: 'Book Mandala', crafting: 'Book Crafting', music: 'Book Music' };
+    fetch('/api/activities').then(function (r) { return r.json(); }).then(function (j) {
+      if (!j.ok || !j.activities) return;
+      grid.innerHTML = j.activities.map(function (a) {
+        var min = Math.min.apply(null, a.durations.map(function (d) { return d.price; }));
+        return '<a class="activity-card reveal in" data-accent="' + (accents[a.slug] || 'sage') + '" href="/book?activity=' + a.slug + '">' +
+          '<div class="act-media"><img src="' + a.image + '" alt="' + a.name + ' at MindSpace Studio" loading="lazy"><span class="act-price-pill">From ₹' + min.toLocaleString('en-IN') + '</span></div>' +
+          '<div class="act-body"><h3>' + a.name + '</h3><p class="act-desc">' + a.tagline + '</p>' +
+          '<div class="act-meta"><span class="chip chip-tint">30–60 min</span><span class="chip chip-sage">Materials included</span></div>' +
+          '<span class="act-cta">' + (verbs[a.slug] || 'Book Now') + ' <span class="arr">→</span></span></div></a>';
+      }).join('');
+    }).catch(function () {});
+  })();
+</script>

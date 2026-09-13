@@ -1,0 +1,94 @@
+<section class="book-head container">
+  <p class="eyebrow">Book a session</p>
+  <h1>Reserve your <span class="em">pause.</span></h1>
+  <p class="lead">Choose an activity, pick a time that suits you, and we'll have your space and materials ready when you arrive.</p>
+</section>
+
+<div class="container book-wrap">
+  <div class="book-main">
+    <!-- progress -->
+    <div class="progress" id="progress" aria-hidden="true">
+      <div class="p-step" data-step="0"><div class="p-dot">1</div><div class="p-label">Activity</div></div>
+      <div class="p-step" data-step="1"><div class="p-dot">2</div><div class="p-label">Duration</div></div>
+      <div class="p-step" data-step="2"><div class="p-dot">3</div><div class="p-label">Date</div></div>
+      <div class="p-step" data-step="3"><div class="p-dot">4</div><div class="p-label">Time</div></div>
+      <div class="p-step" data-step="4"><div class="p-dot">5</div><div class="p-label">Details</div></div>
+      <div class="p-step" data-step="5"><div class="p-dot">6</div><div class="p-label">Payment</div></div>
+    </div>
+    <div class="progress-mobile" aria-hidden="true">
+      <span class="pm-text" id="pmText">Step 1 of 6 · Activity</span>
+      <div class="pm-bar"><div class="pm-fill" id="pmFill" style="width:16.6%"></div></div>
+    </div>
+
+    <!-- steps rendered here -->
+    <div id="stepArea">
+      <div class="skeleton" style="height:200px;border-radius:20px"></div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:18px">
+        <div class="skeleton" style="height:210px"></div><div class="skeleton" style="height:210px"></div>
+        <div class="skeleton" style="height:210px"></div><div class="skeleton" style="height:210px"></div>
+        <div class="skeleton" style="height:210px"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="summary" id="summary" aria-label="Order summary"></aside>
+</div>
+
+<!-- checkout modal -->
+<div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+  <div class="checkout">
+    <div class="co-head">
+      <h3 id="coTitle">🔒 Secure checkout <span class="test-badge" id="coTestBadge">Test mode</span></h3>
+      <button class="co-close" id="coClose" aria-label="Close checkout">✕</button>
+    </div>
+    <div class="co-body">
+      <div class="co-grid">
+        <div>
+          <div class="pay-methods" id="payMethods">
+            <button class="pay-method on" data-method="upi"><span class="pm-ic">📱</span><span><strong>UPI</strong><small>GPay, PhonePe, Paytm &amp; more</small></span><span class="pm-radio"></span></button>
+            <button class="pay-method" data-method="card"><span class="pm-ic">💳</span><span><strong>Card</strong><small>Credit / Debit cards</small></span><span class="pm-radio"></span></button>
+            <button class="pay-method" data-method="netbanking"><span class="pm-ic">🏦</span><span><strong>Net Banking</strong><small>All major banks</small></span><span class="pm-radio"></span></button>
+            <button class="pay-method" data-method="wallet"><span class="pm-ic">👛</span><span><strong>Wallet</strong><small>Paytm, Amazon Pay &amp; more</small></span><span class="pm-radio"></span></button>
+          </div>
+        </div>
+        <div class="co-form" id="coForm">
+          <div id="coUpi">
+            <label class="form-field"><span class="label">UPI ID</span>
+              <input class="input" id="coVpa" inputmode="email" value="yourname@upi" autocomplete="off">
+            </label>
+          </div>
+          <div id="coCard" style="display:none">
+            <label class="form-field"><span class="label">Card number</span>
+              <input class="input" value="4111 1111 1111 1111" inputmode="numeric"></label>
+            <div class="co-row">
+              <label class="form-field"><span class="label">Expiry</span><input class="input" value="12/27" inputmode="numeric"></label>
+              <label class="form-field"><span class="label">CVV</span><input class="input" value="123" inputmode="numeric"></label>
+            </div>
+          </div>
+          <div id="coNet" style="display:none">
+            <label class="form-field"><span class="label">Bank</span>
+              <select class="input"><option>HDFC Bank</option><option>ICICI Bank</option><option>SBI</option><option>Axis Bank</option></select></label>
+          </div>
+          <div id="coWallet" style="display:none">
+            <label class="form-field"><span class="label">Wallet</span>
+              <select class="input"><option>Paytm</option><option>Amazon Pay</option><option>Mobikwik</option></select></label>
+          </div>
+          <div class="co-amount">
+            <span><small>Amount payable</small><br><span class="co-amt" id="coAmount">₹0</span></span>
+            <span style="font-size:12px;color:rgba(250,246,239,.6)">incl. of all charges</span>
+          </div>
+          <div class="co-secure">🔒 256-bit secure · Test transaction — no real money moves</div>
+          <div class="co-status err" id="coStatus" role="alert"></div>
+        </div>
+      </div>
+    </div>
+    <div class="co-foot">
+      <div class="sim-links">
+        <a id="simFail">Simulate a failed payment</a>
+      </div>
+      <button class="btn btn-primary" id="coPay"><span class="arr">Pay <span id="coPayAmt">₹0</span> securely →</span></button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/book.js" defer></script>

@@ -1,0 +1,22 @@
+{
+  "name": "mindspace-studio",
+  "version": "1.0.0",
+  "description": "MindSpace Studio — a creative space to slow down and unwind. Create space for your mind. No experience. Just create.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "seed": "node src/seed.js --reset"
+  },
+  "keywords": [
+    "booking",
+    "studio",
+    "creative",
+    "wellness"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "express": "^5.2.1"
+  }
+}

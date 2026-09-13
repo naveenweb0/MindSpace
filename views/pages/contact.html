@@ -1,0 +1,104 @@
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Contact</p>
+      <h1 class="h-xl">Let's <span class="em">talk.</span></h1>
+      <p class="lead">A question, a booking, or just want to know the vibe before you visit — we're here.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="ci-item">
+          <div class="ci-icon" style="background:var(--sage-tint);color:var(--sage-deep)">📞</div>
+          <div><h3>Phone</h3><p class="js-settings" data-key="phone" data-empty="Phone — set in Admin → Settings"></p></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon" style="background:var(--terracotta-tint);color:var(--terracotta-deep)">💬</div>
+          <div><h3>WhatsApp</h3><a data-wa="" data-wa-msg="Hi! I'd like to know more about MindSpace Studio." class="js-settings-whatsapp" data-key="whatsapp" data-empty="WhatsApp — set in Admin → Settings">WhatsApp — set in Admin → Settings</a></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon" style="background:var(--mustard-tint);color:#7a5a14">✉️</div>
+          <div><h3>Email</h3><p class="js-settings" data-key="email" data-empty="Email — set in Admin → Settings"></p></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon" style="background:var(--lavender-tint);color:#5d5080">📍</div>
+          <div><h3>Address</h3><p><span class="js-settings" data-key="address_line1" data-empty="Studio address — set in Admin → Settings"></span><br><span class="js-settings" data-key="address_line2"></span></p></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon" style="background:var(--cream-2);color:var(--ink-soft)">🕰</div>
+          <div><h3>Opening hours</h3><p id="contactHours">Loading…</p></div>
+        </div>
+
+        <div class="ci-item" style="border-bottom:none;flex-wrap:wrap">
+          <a class="btn btn-primary" data-maps href="#">Get Directions <span class="arr">→</span></a>
+          <a class="btn btn-outline" data-wa="" data-wa-msg="Hi! I'd like to know more about MindSpace Studio.">Chat on WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="contact-form reveal">
+        <h2 class="h-md" style="margin-bottom:18px">Send us a message</h2>
+        <form id="contactForm" novalidate>
+          <div class="form-grid">
+            <div class="form-field"><label for="cName">Name <span class="req">*</span></label>
+              <input class="input" id="cName" autocomplete="name"><span class="field-error">Please enter your name.</span></div>
+            <div class="form-field"><label for="cPhone">Phone</label>
+              <input class="input" id="cPhone" inputmode="tel" autocomplete="tel"></div>
+            <div class="form-field full"><label for="cEmail">Email <span class="req">*</span></label>
+              <input class="input" id="cEmail" type="email" autocomplete="email"><span class="field-error">Please enter a valid email.</span></div>
+            <div class="form-field full"><label for="cMsg">Message <span class="req">*</span></label>
+              <textarea class="textarea" id="cMsg" placeholder="What would you like to know?"></textarea><span class="field-error">Please write a short message.</span></div>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit" id="cSubmit">Send message <span class="arr">→</span></button>
+          <p class="sum-note" id="cDone" style="display:none;color:var(--sage-deep);font-weight:600;margin-top:14px">✓ Thanks! We'll get back to you soon.</p>
+        </form>
+      </div>
+    </div>
+
+    <div class="map-box" data-embed style="margin-top:32px">
+      <div class="map-placeholder">
+        <div>
+          <p style="font-size:30px;margin-bottom:8px">🗺️</p>
+          <p><strong>Map</strong></p>
+          <p style="font-size:14px;max-width:340px">Set the studio's Google Maps link in Admin → Settings and an interactive map will appear here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var s = window.TPS && window.TPS.settings || {};
+    var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var hoursEl = document.getElementById('contactHours');
+    if (hoursEl && s.opening_hours) {
+      var lines = s.opening_hours.map(function (h) {
+        if (h.is_closed) return DAYS[h.day_of_week] + ' · Closed';
+        var f = function (t) { var p = t.split(':'); var hh = +p[0]; var ap = hh >= 12 ? 'PM' : 'AM'; hh = hh % 12 || 12; return hh + (p[1] === '00' ? '' : ':' + p[1]) + ' ' + ap; };
+        return DAYS[h.day_of_week] + ' · ' + f(h.open_time) + ' – ' + f(h.close_time);
+      });
+      hoursEl.innerHTML = lines.join('<br>');
+    }
+    var wa = document.querySelector('.js-settings-whatsapp');
+    if (wa && s.whatsapp) { wa.textContent = s.whatsapp; }
+
+    var form = document.getElementById('contactForm');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('cName').value.trim();
+      var email = document.getElementById('cEmail').value.trim();
+      var msg = document.getElementById('cMsg').value.trim();
+      var ok = true;
+      var mark = function (id, bad) { document.getElementById(id).closest('.form-field').classList.toggle('invalid', bad); if (bad) ok = false; };
+      mark('cName', !name); mark('cEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)); mark('cMsg', !msg);
+      if (!ok) return;
+      var btn = document.getElementById('cSubmit'); btn.disabled = true; btn.textContent = 'Sending…';
+      fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, phone: document.getElementById('cPhone').value, message: msg }) })
+        .then(function (r) { return r.json(); })
+        .then(function () { document.getElementById('cDone').style.display = 'block'; form.reset(); })
+        .catch(function () { if (window.TPS) window.TPS.toast('Could not send — please try again.', 'err'); })
+        .finally(function () { btn.disabled = false; btn.innerHTML = 'Send message <span class="arr">→</span>'; });
+    });
+  })();
+</script>

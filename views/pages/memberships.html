@@ -1,0 +1,67 @@
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head center">
+      <p class="eyebrow">Memberships</p>
+      <h1 class="h-xl">Make a little space <span class="em">for yourself.</span></h1>
+      <p class="lead">Come once, or make your pause part of your routine. Prices and benefits are flexible — pick what fits.</p>
+    </div>
+
+    <div class="plan-grid" id="planGrid">
+      <!-- Drop-in -->
+      <div class="plan-card reveal">
+        <div class="plan-badge">Flexible</div>
+        <h2 class="plan-name">Drop-In</h2>
+        <p class="plan-tag">Pay as you go</p>
+        <div class="plan-price">₹80<span> / session onwards</span></div>
+        <ul class="plan-benefits">
+          <li>Book any single session</li>
+          <li>All materials included</li>
+          <li>No commitment</li>
+          <li>Beginner friendly</li>
+        </ul>
+        <a class="btn btn-outline btn-block" href="/book">Book a Session <span class="arr">→</span></a>
+      </div>
+      <!-- Monthly & Unlimited injected here -->
+    </div>
+  </div>
+</section>
+
+<section class="section section-tint section-tight">
+  <div class="container center">
+    <h2 class="h-lg reveal">How memberships work</h2>
+    <div class="steps-grid" style="max-width:900px;margin:36px auto 0;text-align:left">
+      <div class="step-card reveal"><div class="step-num">01</div><h3>Pick a plan</h3><p>Monthly for a steady rhythm, Unlimited for the truly hooked.</p></div>
+      <div class="step-card reveal reveal-d1"><div class="step-num">02</div><h3>Pay online</h3><p>Checkout in under a minute. You'll get a membership ID instantly.</p></div>
+      <div class="step-card reveal reveal-d2"><div class="step-num">03</div><h3>Book when you like</h3><p>Use your sessions anytime within the month — member pricing applies.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- membership checkout modal -->
+<div class="modal-backdrop" id="memModal" role="dialog" aria-modal="true" aria-labelledby="memTitle">
+  <div class="checkout" style="width:min(560px,100%)">
+    <div class="co-head">
+      <h3 id="memTitle">Become a member 🌿</h3>
+      <button class="co-close" id="memClose" aria-label="Close">✕</button>
+    </div>
+    <div class="co-body" id="memBody">
+      <div class="co-amount"><span><small>Plan</small><br><strong id="memPlanName">—</strong></span><span class="co-amt" id="memPrice">₹0</span></div>
+      <div class="co-form" style="margin-top:16px">
+        <div class="form-field"><label for="mName">Full name <span class="req">*</span></label>
+          <input class="input" id="mName" autocomplete="name"><span class="field-error">Please enter your name.</span></div>
+        <div class="form-field"><label for="mPhone">Mobile number <span class="req">*</span></label>
+          <input class="input" id="mPhone" inputmode="tel" placeholder="98765 43210"><span class="field-error">Enter a valid mobile number.</span></div>
+        <div class="form-field"><label for="mEmail">Email <span style="color:var(--ink-faint)">(optional)</span></label>
+          <input class="input" id="mEmail" type="email"></div>
+      </div>
+      <div class="co-secure" style="margin-top:14px">🔒 Test transaction — no real money moves</div>
+      <div class="co-status err" id="memStatus" role="alert"></div>
+    </div>
+    <div class="co-foot">
+      <span></span>
+      <button class="btn btn-primary" id="memPay">Pay &amp; activate <span class="arr">→</span></button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/memberships.js" defer></script>

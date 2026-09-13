@@ -1,0 +1,39 @@
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head center">
+      <p class="eyebrow">My booking</p>
+      <h1 class="h-xl">Find your <span class="em">pause.</span></h1>
+      <p class="lead">Enter your mobile number to see your bookings, or a booking ID to open a specific one.</p>
+    </div>
+
+    <div class="lookup-card">
+      <div class="form-field">
+        <label for="bPhone">Mobile number <span class="req">*</span></label>
+        <input class="input" id="bPhone" inputmode="tel" placeholder="98765 43210">
+      </div>
+      <div class="form-field">
+        <label for="bRef">Booking ID <span style="color:var(--ink-faint)">(optional — e.g. TP-ABC123)</span></label>
+        <input class="input" id="bRef" placeholder="TP-XXXXXX" style="text-transform:uppercase">
+      </div>
+      <button class="btn btn-primary btn-block" id="bFind">Find my bookings <span class="arr">→</span></button>
+    </div>
+
+    <div id="results"></div>
+  </div>
+</section>
+
+<section class="section section-tint section-tight">
+  <div class="container">
+    <div class="lookup-card">
+      <h2 class="h-md" style="margin-bottom:16px">Have a membership? 🌿</h2>
+      <div class="form-field">
+        <label for="mPhone">Mobile number <span class="req">*</span></label>
+        <input class="input" id="mPhone" inputmode="tel" placeholder="98765 43210">
+      </div>
+      <button class="btn btn-outline btn-block" id="mFind">Find my membership</button>
+      <div id="mResults"></div>
+    </div>
+  </div>
+</section>
+
+<script src="/js/mybooking.js" defer></script>

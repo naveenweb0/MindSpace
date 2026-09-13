@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESC}}">
+  <meta name="theme-color" content="#FAF6EF">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MindSpace Studio">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="{{DESC}}">
+  <meta property="og:image" content="/img/hero.jpg">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/dmsans-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/chatbot.css?v=1.0.1">
+  <script src="/js/main.js" defer></script>
+  <script src="/js/chatbot.js?v=1.0.1" defer></script>
+  <!-- LocalBusiness structured data is populated from admin settings at runtime (never invents an address). -->
+  <script type="application/ld+json" id="ld-json"></script>
+  <script id="studio-settings" type="application/json">{{SETTINGS_JSON}}</script>
+  {{EXTRA_HEAD}}
+</head>
+<body data-page="{{PAGE}}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" id="siteNav">
+    <div class="nav-inner container">
+      <a class="brand" href="/" aria-label="MindSpace Studio — home">
+        <svg class="brand-mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill="#C2653F"/>
+          <rect x="12" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+          <rect x="21.8" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+        </svg>
+        <span class="brand-word">MindSpace <span>Studio</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/" data-nav="home">Home</a>
+        <a href="/sessions" data-nav="sessions">Sessions</a>
+        <a href="/how-it-works" data-nav="how-it-works">How It Works</a>
+        <a href="/memberships" data-nav="memberships">Memberships</a>
+        <a href="/our-space" data-nav="our-space">Our Space</a>
+        <a href="/faq" data-nav="faq">FAQ</a>
+        <a href="/contact" data-nav="contact">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="btn btn-primary btn-sm" href="/book">Book a Session</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav aria-label="Mobile">
+      <a href="/" data-nav="home">Home</a>
+      <a href="/sessions" data-nav="sessions">Sessions</a>
+      <a href="/how-it-works" data-nav="how-it-works">How It Works</a>
+      <a href="/memberships" data-nav="memberships">Memberships</a>
+      <a href="/our-space" data-nav="our-space">Our Space</a>
+      <a href="/faq" data-nav="faq">FAQ</a>
+      <a href="/contact" data-nav="contact">Contact</a>
+      <a class="btn btn-primary btn-block" href="/book">Book a Session</a>
+    </nav>
+  </div>
+
+  <main id="main">
+{{CONTENT}}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand brand-light" href="/">
+            <svg class="brand-mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+              <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill="#C2653F"/>
+              <rect x="12" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+              <rect x="21.8" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+            </svg>
+            <span class="brand-word">MindSpace <span>Studio</span></span>
+          </a>
+          <p class="footer-tagline">Create space for your mind.<br>No experience. Just create.</p>
+          <div class="social-row">
+            <a class="social-link js-social-instagram" href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a class="social-link js-social-whatsapp" href="#" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"/><path d="M8.8 8.9c.3 1.9 4.4 6 6.3 6.3.8.1 1.3-.3 1.7-.9.2-.3.3-.8-.1-1.1l-1.1-.8c-.3-.2-.7-.1-.9.2-.2.2-.5.5-.8.5-.3 0-1-.2-1.7-.9-.7-.7-.9-1.4-.9-1.7 0-.3.3-.6.5-.8.3-.2.4-.6.2-.9l-.8-1.1c-.3-.4-.8-.3-1.1-.1-.6.4-1 1-.9 1.7Z" fill="currentColor" stroke="none"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="/">Home</a>
+          <a href="/sessions">Sessions</a>
+          <a href="/memberships">Memberships</a>
+          <a href="/our-space">Our Space</a>
+          <a href="/faq">FAQ</a>
+          <a href="/contact">Contact</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <p class="js-settings" data-key="phone" data-empty="Phone — coming soon"></p>
+          <p class="js-settings js-settings-email" data-key="email" data-empty="Email — coming soon"></p>
+          <p class="js-settings js-settings-address" data-key="address_line1" data-empty="Studio address — coming soon"></p>
+          <p class="footer-hours js-footer-hours">Opening hours — see Contact</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Start here</h4>
+          <a href="/book" class="footer-cta">Book a Session</a>
+          <a href="/my-booking">Find my booking</a>
+          <a href="/how-it-works">How it works</a>
+          <a href="/gallery">Gallery</a>
+        </div>
+      </div>
+
+      <div class="footer-legal">
+        <span>© 2026 MindSpace Studio</span>
+        <nav aria-label="Legal">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms</a>
+          <a href="/cancellation">Cancellation Policy</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <a class="sticky-book" href="/book" aria-label="Book a session">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    Book a Session
+  </a>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin · MindSpace Studio</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/css/main.css?v=1.0.1">
+  <link rel="stylesheet" href="/css/book.css?v=1.0.1">
+  <link rel="stylesheet" href="/css/admin.css?v=1.0.1">
+  <script src="/js/admin.js?v=1.0.1" defer></script>
+</head>
+<body class="admin-body">
+
+  <!-- ================= LOGIN ================= -->
+  <div id="loginView" class="login-wrap" hidden>
+    <form class="login-card" id="loginForm">
+      <svg class="brand-mark" viewBox="0 0 40 40" width="44" height="44" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill="#C2653F"/>
+        <rect x="12" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+        <rect x="21.8" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+      </svg>
+      <h1 class="login-title">MindSpace Studio</h1>
+      <p class="login-sub">Admin · Studio management</p>
+      <div class="form-field">
+        <label for="aEmail">Email</label>
+        <input class="input" id="aEmail" type="email" autocomplete="username" placeholder="admin@mindspacestudio.in" required>
+      </div>
+      <div class="form-field">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <label for="aPass">Password</label>
+          <button type="button" id="togglePassBtn" style="background:none;border:none;color:#8E3A25;font-size:12px;font-weight:600;cursor:pointer;padding:0">Show</button>
+        </div>
+        <input class="input" id="aPass" type="password" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <div class="login-error" id="loginError" role="alert"></div>
+      <button class="btn btn-primary btn-block" type="submit" id="loginBtn">Sign in</button>
+      <div style="text-align:center;margin-top:12px">
+        <button type="button" id="fillDemoBtn" class="btn btn-secondary btn-sm" style="font-size:12px;padding:6px 12px;background:#F1EBE1;border:none;border-radius:8px;cursor:pointer;color:#3A3632">🔑 Quick Fill Admin Credentials</button>
+      </div>
+      <p class="login-hint" id="loginHint" style="cursor:pointer" title="Click to fill credentials">Default: <strong>admin@mindspacestudio.in</strong> · <strong>pause1234</strong></p>
+    </form>
+  </div>
+
+  <!-- ================= APP ================= -->
+  <div id="appView" class="app-shell" hidden>
+    <aside class="sidebar">
+      <div class="side-brand">
+        <svg class="brand-mark" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill="#C2653F"/>
+          <rect x="12" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+          <rect x="21.8" y="12.5" width="6.2" height="15" rx="3" fill="#FAF6EF"/>
+        </svg>
+        <span>MindSpace Studio</span>
+      </div>
+      <nav class="side-nav" aria-label="Admin">
+        <a data-view="dashboard"><span class="i">📊</span> Dashboard</a>
+        <a data-view="bookings"><span class="i">📅</span> Bookings</a>
+        <a data-view="calendar"><span class="i">🗓️</span> Calendar</a>
+        <a data-view="activities"><span class="i">🎨</span> Activities</a>
+        <a data-view="slots"><span class="i">⏱️</span> Time Slots</a>
+        <a data-view="memberships"><span class="i">🌿</span> Memberships</a>
+        <a data-view="payments"><span class="i">💳</span> Payments</a>
+        <a data-view="analytics"><span class="i">📈</span> Analytics</a>
+        <a data-view="messages"><span class="i">💬</span> Messages</a>
+        <a data-view="chatbot"><span class="i">🤖</span> Chatbot</a>
+        <a data-view="settings"><span class="i">⚙️</span> Settings</a>
+      </nav>
+      <div class="side-foot">
+        <a href="/" target="_blank" rel="noopener">↗ View site</a>
+        <button id="logoutBtn">Sign out</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-top">
+        <h1 id="viewTitle">Dashboard</h1>
+        <div class="app-top-right">
+          <span class="admin-chip" id="adminChip"></span>
+        </div>
+      </header>
+      <div id="viewRoot" class="app-content"><div class="skeleton" style="height:300px;border-radius:20px"></div></div>
+    </div>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div class="toast-wrap" id="toastWrap"></div>
+</body>
+</html>
