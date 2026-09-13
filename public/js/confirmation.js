@@ -42,7 +42,8 @@
     } catch (_) {}
 
     try {
-      const r = await fetch('/api/bookings/lookup', {
+      const fullUrl = window.API_BASE ? window.API_BASE + '/api/bookings/lookup' : '/api/bookings/lookup';
+      const r = await fetch(fullUrl, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref, token }),
       });

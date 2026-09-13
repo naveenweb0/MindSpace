@@ -17,7 +17,9 @@
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/book.css">
-  <link rel="stylesheet" href="/css/chatbot.css?v=1.0.1">
+  <script>
+    window.API_BASE = (location.hostname.includes('vercel.app')) ? 'https://mindspace-s17y.onrender.com' : '';
+  </script>
   <script src="/js/main.js" defer></script>
   <script src="/js/chatbot.js?v=1.0.1" defer></script>
   <!-- LocalBusiness structured data is populated from admin settings at runtime (never invents an address). -->

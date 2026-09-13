@@ -22,10 +22,11 @@
     const token = localStorage.getItem('tps_admin_token');
     if (token) headers['Authorization'] = 'Bearer ' + token;
 
-    const r = await fetch(path, {
+    const fullUrl = (path.startsWith('/api') && window.API_BASE) ? window.API_BASE + path : path;
+
+    const r = await fetch(fullUrl, {
       ...opts,
       headers,
-      credentials: 'same-origin',
     });
     const j = await r.json().catch(() => ({ ok: false, message: 'Network error' }));
     if (!j.ok) {

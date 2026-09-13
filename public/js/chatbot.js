@@ -52,7 +52,8 @@
 
   /* Post JSON helper */
   async function postJSON(url, data) {
-    const res = await fetch(url, {
+    const fullUrl = (url.startsWith('/api') && window.API_BASE) ? window.API_BASE + url : url;
+    const res = await fetch(fullUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -349,7 +350,8 @@
   async function boot() {
     initDOM();
     try {
-      const cfgRes = await fetch('/api/chat/config').then((r) => r.json()).catch(() => ({}));
+      const cfgUrl = window.API_BASE ? window.API_BASE + '/api/chat/config' : '/api/chat/config';
+      const cfgRes = await fetch(cfgUrl).then((r) => r.json()).catch(() => ({}));
       if (cfgRes.ok && cfgRes.config) {
         botConfig = { ...botConfig, ...cfgRes.config };
         if (!botConfig.enabled) {
@@ -362,7 +364,8 @@
       }
 
       // Load history
-      const histRes = await fetch(`/api/chat/history/${sessionId}`).then((r) => r.json()).catch(() => ({}));
+      const histUrl = window.API_BASE ? window.API_BASE + `/api/chat/history/${sessionId}` : `/api/chat/history/${sessionId}`;
+      const histRes = await fetch(histUrl).then((r) => r.json()).catch(() => ({}));
       if (histRes.ok && histRes.messages && histRes.messages.length > 0) {
         histRes.messages.forEach((m) => {
           renderMessage(m.role, m.content, m.tools, m.actions);

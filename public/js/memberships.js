@@ -8,7 +8,8 @@
   let selected = null;
 
   async function api(url, opts) {
-    const r = await fetch(url, opts);
+    const fullUrl = (url.startsWith('/api') && window.API_BASE) ? window.API_BASE + url : url;
+    const r = await fetch(fullUrl, opts);
     const j = await r.json().catch(() => ({ ok: false, message: 'Something went wrong.' }));
     if (!j.ok) throw new Error(j.message || 'Something went wrong.');
     return j;

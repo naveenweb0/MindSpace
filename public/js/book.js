@@ -23,7 +23,8 @@
   let currentBooking = null; // reserved (held) booking while paying
 
   async function api(url, opts) {
-    const res = await fetch(url, opts);
+    const fullUrl = (url.startsWith('/api') && window.API_BASE) ? window.API_BASE + url : url;
+    const res = await fetch(fullUrl, opts);
     let j;
     try { j = await res.json(); } catch (e) { j = { ok: false, message: 'Something went wrong. Please try again.' }; }
     if (!j.ok) { const err = new Error(j.message || 'Something went wrong.'); err.code = j.error; err.extra = j; throw err; }

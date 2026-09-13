@@ -19,7 +19,8 @@
   const localToday = () => { const n = new Date(); return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); };
 
   async function post(url, body) {
-    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const fullUrl = (url.startsWith('/api') && window.API_BASE) ? window.API_BASE + url : url;
+    const r = await fetch(fullUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const j = await r.json().catch(() => ({ ok: false, message: 'Something went wrong.' }));
     if (!j.ok) throw new Error(j.message || 'Something went wrong.');
     return j;

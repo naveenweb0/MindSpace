@@ -101,6 +101,16 @@ function render(res, name, extra = {}) {
 
 const app = express();
 app.disable('x-powered-by');
+
+// Enable CORS for Vercel frontend connection
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 app.use((req, res, next) => { req.cookies = parseCookies(req); req.db = db; next(); });
 app.use(express.json({ limit: '1mb' }));
 
