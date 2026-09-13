@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "MindSpace Studio — a creative space to slow down and unwind. Create space for your mind. No experience. Just create.",
   "main": "src/server.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "node src/server.js",
+    "build": "echo 'No build step required'",
     "seed": "node src/seed.js --reset"
   },
   "keywords": [
