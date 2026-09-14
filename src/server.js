@@ -100,6 +100,14 @@ function render(res, name, extra = {}) {
 /* ----------------------------- app ----------------------------- */
 
 const app = express();
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'MindSpace API'
+  });
+});
+
 app.disable('x-powered-by');
 
 // Enable CORS for Vercel frontend connection
